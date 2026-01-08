@@ -1,0 +1,86 @@
+[
+  {
+    "categoryId": 3,
+    "categoryOrder": 2,
+    "categoryName": "Museums",
+    "attractions": null
+  },
+  {
+    "categoryId": 2,
+    "categoryOrder": 3,
+    "categoryName": "Mosques \u0026 Places of Worship",
+    "attractions": null
+  },
+  {
+    "categoryId": 13,
+    "categoryOrder": 4,
+    "categoryName": "Historical Landmarks",
+    "attractions": null
+  },
+  {
+    "categoryId": 15,
+    "categoryOrder": 4,
+    "categoryName": "Towers \u0026 Observation Decks",
+    "attractions": null
+  },
+  {
+    "categoryId": 8,
+    "categoryOrder": 7,
+    "categoryName": "Airport Transfers \u0026 Transportation",
+    "attractions": null
+  },
+  {
+    "categoryId": 11,
+    "categoryOrder": 7,
+    "categoryName": "Sightseeing \u0026 Bosphorus Cruise",
+    "attractions": null
+  },
+  {
+    "categoryId": 19,
+    "categoryOrder": 7,
+    "categoryName": "Special Offers",
+    "attractions": null
+  },
+  {
+    "categoryId": 12,
+    "categoryOrder": 8,
+    "categoryName": "Shows \u0026 Entertainment",
+    "attractions": null
+  },
+  {
+    "categoryId": 14,
+    "categoryOrder": 10,
+    "categoryName": "Aquariums \u0026 Zoos",
+    "attractions": null
+  },
+  {
+    "categoryId": 6,
+    "categoryOrder": 11,
+    "categoryName": "Experiences",
+    "attractions": null
+  },
+  {
+    "categoryId": 20,
+    "categoryOrder": 11,
+    "categoryName": "Family Friendly",
+    "attractions": null
+  },
+  {
+    "categoryId": 18,
+    "categoryOrder": 12,
+    "categoryName": "Outside the City",
+    "attractions": null
+  },
+  {
+    "categoryId": 17,
+    "categoryOrder": 13,
+    "categoryName": "Outdoor Activities",
+    "attractions": null
+  },
+  {
+    "categoryId": 10,
+    "categoryOrder": 20,
+    "categoryName": "Services \u0026 Benefits",
+    "attractions": null
+  }
+]

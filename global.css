@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Font Family - Default Roboto for all text elements */
+@layer base {
+  * {
+    font-family: 'Roboto_400Regular', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .font-normal {
+    font-family: 'Roboto_400Regular', 'Roboto', sans-serif;
+  }
+
+  .font-medium {
+    font-family: 'Roboto_500Medium', 'Roboto', sans-serif;
+  }
+
+  .font-bold {
+    font-family: 'Roboto_700Bold', 'Roboto', sans-serif;
+  }
+}
+
