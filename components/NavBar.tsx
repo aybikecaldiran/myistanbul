@@ -47,12 +47,12 @@ export default function NavBar({
       Animated.sequence([
         Animated.timing(titleFadeAnim, {
           toValue: 0,
-          duration: 300,
+          duration: 150,
           useNativeDriver: true,
         }),
         Animated.timing(titleFadeAnim, {
           toValue: 1,
-          duration: 300,
+          duration: 150,
           useNativeDriver: true,
         }),
       ]).start();

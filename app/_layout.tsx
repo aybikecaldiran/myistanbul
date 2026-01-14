@@ -70,6 +70,8 @@ function RootLayoutNav() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="activity" options={{ headerShown: false }} />
         <Stack.Screen name="about" options={{ headerShown: false }} />
+        <Stack.Screen name="importantNote" options={{ headerShown: false }} />
+        <Stack.Screen name="contactUs" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
       </Stack>
     </NavigationThemeProvider>

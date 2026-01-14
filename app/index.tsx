@@ -7,7 +7,6 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -160,7 +159,9 @@ export default function WelcomeScreen() {
       <SafeAreaView style={{
         flex: 1,
         backgroundColor: theme === "dark" ? "#111827" : "#fff"
-      }}>
+      }}
+      className={""}
+      >
         <View
             style={{
               flex: 1,
@@ -168,6 +169,9 @@ export default function WelcomeScreen() {
               direction: isRTL ? 'rtl' : 'ltr',
             }}
         >
+          <View
+              className={"w-full h-70 overflow-hidden items-start"}
+          >
           <HeroImageSection
             theme={theme}
             height={height}
@@ -176,7 +180,7 @@ export default function WelcomeScreen() {
             medium={medium}
             small={small}
           />
-
+        </View>
           <KeyboardAvoidingView
               style={{ flex: 1 }}
               behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -203,24 +207,9 @@ export default function WelcomeScreen() {
                       paddingTop: 0,
                     }}
                 >
-                  <LinearGradient
-                      colors={[
-                        'transparent',
-                        theme === "dark" ? "rgba(17, 24, 39, 0.1)" : "rgba(255, 255, 255, 0.1)",
-                      ]}
-                      locations={[0, 1]}
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: 120,
-                        zIndex: 1,
-                      }}
-                  />
 
                   <View style={{
-                    paddingTop: 0,
+                    paddingTop: 10,
                     zIndex: 2,
                     position: 'relative',
                     backgroundColor: theme === "dark" ? "#111827" : "#ffffff"
