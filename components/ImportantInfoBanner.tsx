@@ -4,9 +4,10 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 interface ImportantInfoBannerProps {
   theme: string;
+  importantInfo?: string;
 }
 
-export default function ImportantInfoBanner({ theme }: ImportantInfoBannerProps) {
+export default function ImportantInfoBanner({ theme, importantInfo }: ImportantInfoBannerProps) {
   return (
     <View className="mb-8 rounded-2xl bg-red-50 dark:bg-red-900/20 p-4">
       <View className="flex-row gap-3 items-start">
@@ -16,7 +17,7 @@ export default function ImportantInfoBanner({ theme }: ImportantInfoBannerProps)
         <View className="flex-1">
           <Text className="text-sm font-bold text-red-700 dark:text-red-200">Important Info</Text>
           <Text className="text-sm text-red-600 dark:text-red-300 mt-1 leading-snug">
-            Please ensure you arrive at the pier 20 minutes before departure. Late arrivals will not be refunded.
+            {importantInfo && importantInfo !== 'NULL' ? importantInfo : 'NULL'}
           </Text>
         </View>
       </View>

@@ -278,14 +278,20 @@ export interface Activity {
   title: string;
   category: string;
   image: string;
-  rating: number;
+  rating: number | string;
   reviews: string;
   tags: string[];
   features: string[];
   badge?: { text: string; type: string };
-  priceType?: 'free' | 'discounted';
+  priceType?: 'free' | 'discounted' | string;
   price?: number;
   status?: string;
+  operatingHours?: string;
+  faqs?: any;
+  address?: string;
+  importantInfo?: string;
+  included?: string;
+  excluded?: string;
 }
 
 
@@ -4097,6 +4103,6 @@ export const userPassData = {
   passId: "ITP1234567890",
   passType: "3 Days",
   participants: "2 Adult, 1 Child",
-  startDate: "2026-01-06",
+  startDate: "2026-01-11",
   isActive: true,
 }

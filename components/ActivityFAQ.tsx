@@ -1,28 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 interface ActivityFAQProps {
   theme: string;
-  expandedFaq: number | null;
-  onToggleFaq: (index: number) => void;
+  faqs?: { question: string; answer: string }[];
 }
 
-export default function ActivityFAQ({ theme, expandedFaq, onToggleFaq }: ActivityFAQProps) {
-  const faqItems = [
-    {
-      question: 'How do I access this attraction?',
-      answer: 'Simply show your Istanbul Tourist Pass at the entrance. No additional tickets needed!'
-    },
-    {
-      question: 'What should I bring?',
-      answer: 'Please bring comfortable shoes, a camera, and your Istanbul Tourist Pass. Check the weather for appropriate clothing.'
-    },
-    {
-      question: 'Is this suitable for children?',
-      answer: 'Yes, this attraction is family-friendly and suitable for children of all ages.'
-    }
-  ];
+export default function ActivityFAQ({ theme, faqs }: ActivityFAQProps) {
+  const faqItems = Array.isArray(faqs) && faqs.length > 0 ? faqs : [{ question: 'NULL', answer: 'NULL' }];
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
+
+  const handleToggleFaq = (index: number) => {
+    setExpandedFaq(expandedFaq === index ? null : index);
+  };
 
   return (
     <View className="mb-32">
@@ -36,7 +27,7 @@ export default function ActivityFAQ({ theme, expandedFaq, onToggleFaq }: Activit
           }`}>
             <TouchableOpacity
               className="flex-row items-center justify-between p-5"
-              onPress={() => onToggleFaq(index)}
+              onPress={() => handleToggleFaq(index)}
             >
               <Text className={`font-bold flex-1 ${theme === 'dark' ? 'text-white' : 'text-[#1c0c11]'}`}>
                 {item.question}

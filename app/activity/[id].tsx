@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useThemeContext } from '@/components/ThemeContext';
 import { useResponsive } from '@/hooks/useResponsive';
-import { list_activities, activities, type Activity as BaseActivity } from '@/data/mockData';
+import { getProduct } from '@/app/api/services/products';
 import Button from '@/components/UI/Button';
 import ActivityHeader from '@/components/ActivityHeader';
 import ActivityTitleSection from '@/components/ActivityTitleSection';
@@ -24,29 +24,29 @@ import ActivityLocationMap from '@/components/ActivityLocationMap';
 import ActivityReviews from '@/components/ActivityReviews';
 import ActivityFAQ from '@/components/ActivityFAQ';
 
-interface Activity extends BaseActivity {
+interface Activity {
+  id: number;
+  title: string;
+  category: string;
+  image: string;
+  rating: string;
+  reviews: string;
+  tags: string | string[];
+  features: string | any[];
+  priceType: string;
+  opening_hours: string;
+  faqs: string | any[];
+  address: string;
+  importantInfo: string;
+  included: string;
   description?: string;
   short_description?: string;
   location?: string;
-  opening_hours?: string;
   duration?: string;
-  has_skip_the_line?: boolean;
-  has_instant_access?: boolean;
-  is_free_with_pass?: boolean;
-  is_discounted_with_pass?: boolean;
-  category_id?: number;
-  click_count?: number;
-  discounted_price?: number;
+  price: string;
 }
 
 const { height } = Dimensions.get('window');
-
-const getActivityById = (id: string | number): Activity | null => {
-  const allActivities = [...list_activities, ...activities];
-  const found = allActivities.find(activity => activity.id.toString() === id.toString());
-  return found ? (found as Activity) : null;
-};
-
 
 export default function ActivityDetailScreen() {
   const { theme } = useThemeContext();
@@ -57,7 +57,57 @@ export default function ActivityDetailScreen() {
   const [readMore, setReadMore] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
 
-  const activity = getActivityById(id as string);
+  const [activity, setActivity] = useState<Activity | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    getProduct(id as string)
+      .then((data: any) => {
+        const content = data.bookberryContent || {};
+        const display = content.display || {};
+        const richContent = content.richContent || {};
+        const media = content.media || {};
+        const htmlContent = content.htmlContent || {};
+        const inclusions = Array.isArray(richContent.features)
+          ? richContent.features.filter((f: any) => f.type === 'INCLUSION')
+          : ['NULL'];
+        const mappedActivity: Activity = {
+          id: typeof data.id === 'string' ? data.id : (parseInt(data.id) || 0),
+          title: display.title ?? 'NULL',
+          short_description: display.shortDescription ?? 'NULL',
+          description: display.shortDescription ?? 'NULL',
+          category: !richContent.categoryLabels || richContent.categoryLabels.length === 0
+            ? 'NULL'
+            : richContent.categoryLabels.join(', '),
+          image: media.cover ?? 'NULL',
+          features: richContent.features ?? ['NULL'],
+          faqs: Array.isArray(richContent.faqs) && richContent.faqs.length > 0 ? richContent.faqs : [{ question: 'NULL', answer: 'NULL' }],
+          importantInfo: htmlContent.importantInfo && htmlContent.importantInfo.trim() !== '' ? htmlContent.importantInfo : 'NULL',
+          included: inclusions.length > 0 ? inclusions : ['NULL'],
+          address: 'NULL',
+          priceType: data.priceType ?? 'NULL',
+          rating: data.rating ?? 'NULL',
+          reviews:
+            data.reviews && typeof data.reviews.count === 'number'
+              ? data.reviews.count.toString()
+              : 'NULL',
+          tags: data.tags ?? 'NULL',
+          opening_hours: data.opening_hours ?? 'NULL',
+          duration: data.duration ?? 'NULL',
+          location: data.location ?? 'NULL',
+          price: data.price ?? 'NULL',
+        };
+        setActivity(mappedActivity);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError('Activity Not Found');
+        setLoading(false);
+      });
+  }, [id]);
 
   const scrollToMapSection = () => {
     if (scrollViewRef.current) {
@@ -76,7 +126,18 @@ export default function ActivityDetailScreen() {
     setReadMore(!readMore);
   };
 
-  if (!activity) {
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center bg-white dark:bg-gray-900">
+        <MaterialIcons name="hourglass-empty" size={64} color="#f2024e" />
+        <Text className="text-xl font-bold text-gray-900 dark:text-white mt-4">
+          Loading...
+        </Text>
+      </View>
+    );
+  }
+
+  if (error || !activity) {
     return (
       <View className="flex-1 justify-center items-center bg-white dark:bg-gray-900">
         <MaterialIcons name="error-outline" size={64} color="#EF4444" />
@@ -115,9 +176,9 @@ export default function ActivityDetailScreen() {
 
       <ActivityTitleSection activity={activity} theme={theme} />
 
-      <ActivityFeatures features={activity.features} theme={theme} />
+      <ActivityFeatures features={Array.isArray(activity.features) ? activity.features : ['NULL']} theme={theme} />
 
-      <ImportantInfoBanner theme={theme} />
+      <ImportantInfoBanner theme={theme} importantInfo={activity.importantInfo} />
 
       <ActivityDescription
         activity={activity}
@@ -126,33 +187,9 @@ export default function ActivityDetailScreen() {
         onToggleReadMore={handleToggleReadMore}
       />
 
-      {activity.opening_hours && (
-        <View className="mb-8">
-          <Text className={`text-lg font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-[#1c0c11]'}`}>
-            Opening Hours
-          </Text>
-          <View className="bg-gray-50 dark:bg-gray-700 rounded-2xl p-4">
-            <View className="flex-row items-center gap-3">
-              <MaterialIcons name="access-time" size={24} color="#f2024e" />
-              <Text className={`text-base font-bold ${theme === 'dark' ? 'text-white' : 'text-[#1c0c11]'}`}>
-                {activity.location || 'Istanbul, Turkey'}
-              </Text>
-            </View>
-            {activity.location && (
-              <View className="flex-row items-center gap-3 mt-3">
-                <MaterialIcons name="place" size={24} color="#f2024e" />
-                <Text className={`text-base ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                  {activity.location}
-                </Text>
-              </View>
-            )}
-          </View>
-        </View>
-      )}
-
       <ActivityIncluded activity={activity} theme={theme} />
 
-      <ActivityOperatingHours theme={theme} />
+      <ActivityOperatingHours theme={theme} openingHours={activity.opening_hours} />
 
       <ActivityLocationMap activity={activity} theme={theme} />
 
@@ -162,6 +199,7 @@ export default function ActivityDetailScreen() {
         theme={theme}
         expandedFaq={expandedFaq}
         onToggleFaq={handleToggleFaq}
+        faqs={Array.isArray(activity.faqs) ? activity.faqs : undefined}
       />
     </View>
   );
@@ -188,26 +226,13 @@ export default function ActivityDetailScreen() {
       }`}>
         <View className="flex-row items-center justify-between gap-4">
           <View>
-            {/*{activity.price && activity.price > 0 && (*/}
-              <Text className="text-xs font-medium text-gray-400 line-through">
-                {/*Price Without Pass €{activity.price}.00*/}
-                Price Without Pass €45.00
-              </Text>
-            {/*)}*/}
+            <Text className="text-xs font-medium text-gray-400 line-through">
+              {activity.price && activity.price !== 'NULL' ? `Price Without Pass €${activity.price}` : 'Price Without Pass € NULL'}
+            </Text>
             <View className="flex-row items-center gap-1.5 mt-0.5">
               <Text className="text-lg font-black text-[#f2024e] tracking-tight">
-                FREE WITH PASS
-                {/*{activity.priceType === 'free'*/}
-                {/*  ? 'FREE WITH PASS'*/}
-                {/*  : activity.is_discounted_with_pass*/}
-                {/*    ? `€${activity.discounted_price || Math.floor((activity.price || 0) * 0.7)}`*/}
-                {/*    : `€${activity.price || 0}`*/}
-                {/*}*/}
-                {/*<Text className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-[#1c0c11]'}`}>*/}
-                {/*  {activity.priceType === 'free'*/}
-                {/*      ? 'FREE with Pass'*/}
-                {/*      : activity.priceType === 'discounted'*/}
-                {/*          ? `€${activity.price || 0} DISCOUNTED`*/}
+                {/*FREE WITH PASS*/}
+                {activity.priceType && activity.priceType !== 'NULL' ? activity.priceType : 'NULL'}
               </Text>
               <MaterialIcons name="check-circle" size={20} color="#f2024e" />
             </View>

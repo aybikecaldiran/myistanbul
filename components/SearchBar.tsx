@@ -1,15 +1,18 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, TextInput, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 interface SearchBarProps {
   searchText: string;
   onSearchChange: (text: string) => void;
   onFilterPress: () => void;
   theme: string;
+  showFilterButton?: boolean;
+  placeholderTextColor?: string;
 }
 
-export default function SearchBar({ searchText, onSearchChange, onFilterPress, theme }: SearchBarProps) {
+export default function SearchBar({ searchText, onSearchChange, onFilterPress, theme, showFilterButton = true, placeholderTextColor }: SearchBarProps) {
   return (
     <View className="w-full mb-4">
       <View className={`flex-row items-center h-12 rounded-full shadow-sm border ${
@@ -23,16 +26,18 @@ export default function SearchBar({ searchText, onSearchChange, onFilterPress, t
             theme === "dark" ? "text-white" : "text-[#1C0C11]"
           }`}
           placeholder="Search attractions, museums..."
-          placeholderTextColor={theme === "dark" ? "#9CA3AF" : "#A04662"}
+          placeholderTextColor={placeholderTextColor || (theme === "dark" ? "#9CA3AF" : "#A04662")}
           value={searchText}
           onChangeText={onSearchChange}
         />
-        <TouchableOpacity
-          className="w-10 h-10 rounded-full bg-[#f2024e]/10 justify-center items-center mr-1"
-          onPress={onFilterPress}
-        >
-          <MaterialIcons name="tune" size={20} color="#f2024e" />
-        </TouchableOpacity>
+        {showFilterButton && (
+          <TouchableOpacity
+            className="w-10 h-10 rounded-full bg-[#f2024e]/10 justify-center items-center mr-1"
+            onPress={onFilterPress}
+          >
+            <Feather name="filter" size={20} color="#f2024e" />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

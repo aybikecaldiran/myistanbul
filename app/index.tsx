@@ -77,7 +77,7 @@ export default function WelcomeScreen() {
     ]).start();
 
     // // Log device information for development
-    // console.log('🌍 Device Localization:', {
+    // console.log('Device Localization:', {
     //   locale: localization.locale,
     //   language: localization.language,
     //   region: localization.region,
@@ -95,7 +95,7 @@ export default function WelcomeScreen() {
     //   isDevice: device.isDevice
     // });
 
-  //   console.log('📦 App Info:', {
+  //   console.log('App Info:', {
   //     appName: appInfo.appName,
   //     appVersion: appInfo.appVersion,
   //     buildVersion: appInfo.buildVersion
